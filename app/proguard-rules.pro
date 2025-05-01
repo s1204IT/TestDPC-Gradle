@@ -1,0 +1,3 @@
+-keep class androidx.core.app.CoreComponentFactory
+-keepattributes LineNumberTable,SourceFile
+-renamesourcefileattribute SourceFile

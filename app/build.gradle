@@ -86,7 +86,7 @@ dependencies {
     implementation "org.bouncycastle:bcpkix-jdk18on:1.81"
     implementation "org.bouncycastle:bcprov-jdk18on:1.81"
     //implementation "org.robolectric:robolectric:4.14.1"
-    implementation "com.google.truth:truth:1.4.4"
+    implementation "com.google.truth:truth:1.4.5"
     implementation project(":setupcompat")
     implementation project(":setupdesign")
 }

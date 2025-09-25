@@ -7,7 +7,7 @@ android {
     compileSdk = 36
 
     defaultConfig {
-        minSdk = 21
+        minSdk = 23
         targetSdk = 36
         versionCode = 9012
         versionName = "9.0.12"
@@ -73,7 +73,7 @@ dependencies {
     implementation "androidx.test:core:1.7.0"
     implementation "androidx.test:monitor:1.8.0"
     implementation "androidx.test:runner:1.7.0"
-    implementation "androidx.window:window:1.4.0"
+    implementation "androidx.window:window:1.5.0"
     implementation "com.google.android.material:material:1.13.0"
     implementation "com.google.guava:guava:33.5.0-android"
     implementation "com.google.testparameterinjector:test-parameter-injector:1.19"

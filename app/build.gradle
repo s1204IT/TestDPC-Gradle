@@ -76,7 +76,7 @@ dependencies {
     implementation "androidx.window:window:1.5.1"
     implementation "com.google.android.material:material:1.13.0"
     implementation "com.google.guava:guava:33.5.0-android"
-    implementation "com.google.testparameterinjector:test-parameter-injector:1.19"
+    implementation "com.google.testparameterinjector:test-parameter-injector:1.20"
     implementation "com.google.errorprone:error_prone_annotations:2.44.0"
     implementation "junit:junit:4.13.2"
     implementation "javax.inject:javax.inject:1"

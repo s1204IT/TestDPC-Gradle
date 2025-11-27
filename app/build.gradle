@@ -83,8 +83,8 @@ dependencies {
     //implementation "org.hamcrest:java-hamcrest:2.0.0.0"
     //implementation "org.robolectric:robolectric-annotations:3.3.2"
     //implementation "org.robolectric:shadows-core:3.3.2"
-    implementation "org.bouncycastle:bcpkix-jdk18on:1.82"
-    implementation "org.bouncycastle:bcprov-jdk18on:1.82"
+    implementation "org.bouncycastle:bcpkix-jdk18on:1.83"
+    implementation "org.bouncycastle:bcprov-jdk18on:1.83"
     //implementation "org.robolectric:robolectric:4.14.1"
     implementation "com.google.truth:truth:1.4.5"
     implementation project(":setupcompat")

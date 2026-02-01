@@ -526,6 +526,8 @@ public class PolicyManagementFragment extends BaseSearchablePolicyPreferenceFrag
   private DpcSwitchPreference mSetAutoTimeZonePreference;
   private DpcPreference mLogoutUserPreference;
   private DpcPreference mManageLockTaskListPreference;
+  private DpcPreference mCreateManagedProfilePreference;
+  private DpcPreference mCreateAndManageUserPreference;
   private DpcPreference mSetLockTaskFeaturesPreference;
   private DpcPreference mUnhideAppsParentPreference;
   private DpcPreference mHideAppsParentPreference;
@@ -613,8 +615,12 @@ public class PolicyManagementFragment extends BaseSearchablePolicyPreferenceFrag
     findPreference(START_LOCK_TASK).setOnPreferenceClickListener(this);
     findPreference(RELAUNCH_IN_LOCK_TASK).setOnPreferenceClickListener(this);
     findPreference(STOP_LOCK_TASK).setOnPreferenceClickListener(this);
-    findPreference(CREATE_MANAGED_PROFILE_KEY).setOnPreferenceClickListener(this);
-    findPreference(CREATE_AND_MANAGE_USER_KEY).setOnPreferenceClickListener(this);
+    mCreateManagedProfilePreference = (DpcPreference) findPreference(CREATE_MANAGED_PROFILE_KEY);
+    mCreateManagedProfilePreference.setOnPreferenceClickListener(this);
+    mCreateManagedProfilePreference.setCustomConstraint(this::validateCompModeBeforeR);
+    mCreateAndManageUserPreference = (DpcPreference) findPreference(CREATE_AND_MANAGE_USER_KEY);
+    mCreateAndManageUserPreference.setOnPreferenceClickListener(this);
+    mCreateAndManageUserPreference.setCustomConstraint(this::validateNotHsumMode);
     findPreference(REMOVE_USER_KEY).setOnPreferenceClickListener(this);
     findPreference(SWITCH_USER_KEY).setOnPreferenceClickListener(this);
     findPreference(START_USER_IN_BACKGROUND_KEY).setOnPreferenceClickListener(this);
@@ -695,6 +701,11 @@ public class PolicyManagementFragment extends BaseSearchablePolicyPreferenceFrag
     mEnableUsbDataSignalingPreference =
         (DpcSwitchPreference) findPreference(ENABLE_USB_DATA_SIGNALING_KEY);
     mEnableUsbDataSignalingPreference.setOnPreferenceChangeListener(this);
+    if (!canUsbDataSignalingBeDisabled()) {
+      Log.d(TAG, "USB data signaling cannot be disabled");
+      mEnableUsbDataSignalingPreference.setChecked(true);
+      mEnableUsbDataSignalingPreference.setCustomConstraint(() -> R.string.not_for_this_device);
+    }
     findPreference(REQUEST_BUGREPORT_KEY).setOnPreferenceClickListener(this);
     mEnableSecurityLoggingPreference = (SwitchPreference) findPreference(ENABLE_SECURITY_LOGGING);
     mEnableSecurityLoggingPreference.setOnPreferenceChangeListener(this);
@@ -894,6 +905,7 @@ public class PolicyManagementFragment extends BaseSearchablePolicyPreferenceFrag
   }
 
   @Override
+  @TargetApi(VERSION_CODES.S)
   public void dump(String prefix, PrintWriter pw, String[] args) {
     // TODO(b/173541467): needs to compile against @SystemAPI SDK to get it
     // pw.printf("%smUserId: %s\n", prefix, getActivity().getUserId());
@@ -909,9 +921,11 @@ public class PolicyManagementFragment extends BaseSearchablePolicyPreferenceFrag
     pw.printf(
         "%sisRunningOnAutomotiveDevice(): %s\n",
         prefix, Util.isRunningOnAutomotiveDevice(getActivity()));
-    // TODO(b/173541467): need to expose it
-    //        pw.printf("%sisHeadlessSystemUserMode(): %s\n", prefix,
-    //                mUserManager.isHeadlessSystemUserMode());
+    if (Util.SDK_INT >= VERSION_CODES.S) {
+      pw.printf(
+          "%sisHeadlessSystemUserMode(): %s\n",
+          prefix, mUserManager.isHeadlessSystemUserMode());
+    }
   }
 
   private void maybeUpdateProfileMaxTimeOff() {
@@ -1793,6 +1807,11 @@ public class PolicyManagementFragment extends BaseSearchablePolicyPreferenceFrag
   @TargetApi(VERSION_CODES.S)
   private void setUsbDataSignalingEnabled(boolean enabled) {
     mDevicePolicyManagerGateway.setUsbDataSignalingEnabled(enabled);
+  }
+
+  @TargetApi(VERSION_CODES.S)
+  private boolean canUsbDataSignalingBeDisabled() {
+    return mDevicePolicyManagerGateway.canUsbDataSignalingBeDisabled();
   }
 
   @TargetApi(VERSION_CODES.M)
@@ -4537,22 +4556,10 @@ public class PolicyManagementFragment extends BaseSearchablePolicyPreferenceFrag
                 showToast(R.string.organization_id_empty);
                 return;
               }
-              setOrganizationId(organizationId);
+              mDevicePolicyManager.setOrganizationId(organizationId);
             })
         .setNegativeButton(android.R.string.cancel, null)
         .show();
-  }
-
-  private void setOrganizationId(String organizationId) {
-    try {
-      // TODO(b/179160578): Call directly when the S SDK is available.
-      ReflectionUtil.invoke(mDevicePolicyManager, "setOrganizationId", organizationId);
-    } catch (ReflectionIsTemporaryException e) {
-      Log.e(TAG, "Error invoking setOrganizationId", e);
-      showToast("Error setting organization ID");
-    }
-
-    loadEnrollmentSpecificId();
   }
 
   @TargetApi(VERSION_CODES.R)
@@ -4824,6 +4831,20 @@ public class PolicyManagementFragment extends BaseSearchablePolicyPreferenceFrag
     // Android V
     if (mIsOrganizationOwnedProfileOwner && Util.SDK_INT < VERSION_CODES.VANILLA_ICE_CREAM) {
       return R.string.requires_android_v;
+    }
+    return NO_CUSTOM_CONSTRAINT;
+  }
+
+  private int validateCompModeBeforeR() {
+    if (Util.SDK_INT >= VERSION_CODES.R) {
+      return R.string.comp_not_supported_since_r;
+    }
+    return NO_CUSTOM_CONSTRAINT;
+  }
+
+  private int validateNotHsumMode() {
+    if (Util.SDK_INT >= VERSION_CODES.S && mUserManager.isHeadlessSystemUserMode()) {
+      return R.string.not_supported_on_hsum;
     }
     return NO_CUSTOM_CONSTRAINT;
   }

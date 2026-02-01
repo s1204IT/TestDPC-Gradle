@@ -189,7 +189,7 @@ public class EsimControlFragment extends BaseSearchablePolicyPreferenceFragment
   }
 
   private void showManagedEsimUi() {
-    Set<Integer> managedSubIds = getSubscriptionIds();
+    Set<Integer> managedSubIds = mDevicePolicyManager.getSubscriptionIds();
     new AlertDialog.Builder(getActivity())
         .setTitle(R.string.get_managed_esim_dialog_title)
         .setItems(managedSubIds.stream().map(String::valueOf).toArray(String[]::new), null)

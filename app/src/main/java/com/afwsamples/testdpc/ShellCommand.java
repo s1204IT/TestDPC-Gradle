@@ -29,6 +29,7 @@ import android.app.admin.NetworkEvent;
 import android.app.admin.SecurityLog.SecurityEvent;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -604,6 +605,24 @@ final class ShellCommand {
     flags.addCommand(
         command("clear-password", this::clearPassword)
             .setDescription("Resets password to an empty one. Requires an active token"));
+    flags.addCommand(
+        command(
+                "set-screencapture-disabled",
+                this::setScreenCaptureDisabled,
+                ordinalParam(boolean.class, "disabled"))
+            .setDescription("Set whether screen capture is disabled."));
+    flags.addCommand(
+        command("add-persistent-preferred-activity", 
+            this::addPersistentPreferredActivity,
+                ordinalParam(String.class, "activityName"),
+                ordinalParam(String.class, "action"),
+                repeated(ordinalParam(String.class, "categories")))
+            .setDescription("Adds a preferred activity for the given intent filter."));
+    flags.addCommand(
+        command("clear-package-persistent-preferred-activities", 
+            this::clearPackagePersistentPreferredActivities,
+                ordinalParam(String.class, "packageName"))
+            .setDescription("Clears preferred activities assigned to an app."));
 
     // Separator for S / pre-S commands - do NOT remove line to avoid cherry-pick conflicts
 
@@ -614,6 +633,11 @@ final class ShellCommand {
                   this::setUsbDataSignalingEnabled,
                   ordinalParam(boolean.class, "enabled"))
               .setDescription("Enable / disable USB data signaling."));
+      flags.addCommand(
+          command(
+                  "can-usb-data-signaling-be-disabled",
+                  this::canUsbDataSignalingBeDisabled)
+              .setDescription("Check if USB data signaling can be disabled."));
       flags.addCommand(
           command(
                   "set-permitted-input-methods-parent",
@@ -1084,6 +1108,11 @@ final class ShellCommand {
         (e) -> onError(e, "Error setting USB data signaling to %b", enabled));
   }
 
+  private void canUsbDataSignalingBeDisabled() {
+    boolean result = mDevicePolicyManagerGateway.canUsbDataSignalingBeDisabled();
+    mWriter.printf("canUsbDataSignalingBeDisabled: %b\n", result);
+  }
+
   private void setSuspendedPackages(boolean suspended, String[] packageNames) {
     String printableNames = Arrays.toString(packageNames);
     String printableStatus = suspendedToString(suspended);
@@ -1459,6 +1488,13 @@ final class ShellCommand {
     resetPasswordWithToken("");
   }
 
+  private void setScreenCaptureDisabled(boolean disabled) {
+    mDevicePolicyManagerGateway.setScreenCaptureDisabled(
+        disabled,
+        (v) -> onSuccess("Screen capture disabled set to %b", disabled),
+        (e) -> onError(e, "Error setting screen capture disabled to %b", disabled));
+  }
+
   private byte[] getActiveResetPasswordToken() {
     byte[] token = ResetPasswordWithTokenFragment.loadPasswordResetTokenFromPreference(mContext);
     if (token == null) {
@@ -1539,6 +1575,28 @@ final class ShellCommand {
         (v) -> onSuccessLog("Generated key: %s", v),
         (e) -> onErrorLog(e, "Error generating key with alias %s, flags %d, and spec %s",
             alias, flags, keySpec));
+  }
+
+  private void addPersistentPreferredActivity(String activityName, String action, String[] categories) {
+    ComponentName activityComponentName = ComponentName.unflattenFromString(activityName);
+    IntentFilter filter = new IntentFilter(action);
+    for (String category : categories) {
+      filter.addCategory(category);
+    }
+    mDevicePolicyManagerGateway.addPersistentPreferredActivity(activityComponentName, filter,
+        (v) ->
+            onSuccess("Successfully added persistent preferred activity (%s) for intent filter %s", activityComponentName, Util.toString(filter)),
+        (e) ->
+            onError(e, "Error adding persistent preferred activity (%s) for intent filter %s", activityComponentName, Util.toString(filter)));
+  }
+
+  private void clearPackagePersistentPreferredActivities(String packageName) {
+    mDevicePolicyManagerGateway.clearPackagePersistentPreferredActivities(
+        packageName,
+        (v) ->
+            onSuccess("Successfully cleared package persistent preferred activities for %s", packageName),
+        (e) ->
+            onError(e, "Error clearing package persistent preferred activities for %s", packageName));
   }
 
   private void post(Runnable r) {

@@ -75,7 +75,7 @@ dependencies {
     implementation "androidx.test:runner:1.7.0"
     implementation "androidx.window:window:1.5.1"
     implementation "com.google.android.material:material:1.13.0"
-    implementation "com.google.guava:guava:33.5.0-android"
+    implementation "com.google.guava:guava:33.6.0-android"
     implementation "com.google.testparameterinjector:test-parameter-injector:1.22"
     implementation "com.google.errorprone:error_prone_annotations:2.49.0"
     implementation "junit:junit:4.13.2"

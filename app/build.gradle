@@ -4,11 +4,11 @@ plugins {
 
 android {
     namespace = "com.afwsamples.testdpc"
-    compileSdk = 36
+    compileSdk = 37
 
     defaultConfig {
         minSdk = 23
-        targetSdk = 36
+        targetSdk = compileSdk
         versionCode = 9014
         versionName = "9.0.14"
         proguardFiles += "proguard-rules.pro"

@@ -4,11 +4,11 @@ plugins {
 
 android {
     namespace = "com.afwsamples.testdpc"
-    compileSdk = 36
+    compileSdk = 37
 
     defaultConfig {
         minSdk = 23
-        targetSdk = 36
+        targetSdk = compileSdk
         versionCode = 9014
         versionName = "9.0.14"
         proguardFiles += "proguard-rules.pro"
@@ -60,7 +60,7 @@ dependencies {
     implementation "androidx.appcompat:appcompat-resources:1.7.1"
     implementation "androidx.collection:collection:1.6.0"
     implementation "androidx.constraintlayout:constraintlayout:2.2.1"
-    implementation "androidx.core:core:1.18.0"
+    implementation "androidx.core:core:1.19.0"
     implementation "androidx.enterprise:enterprise-feedback:1.1.0"
     implementation "androidx.legacy:legacy-support-core-ui:1.0.0"
     implementation "androidx.legacy:legacy-support-v13:1.0.0"

@@ -22,6 +22,7 @@
     <item name="sud_glif_expressive_preference_template_content_layout" type="layout">@layout/sud_glif_expressive_preference_template_content</item>
     <item name="sud_glif_expressive_recycler_template_content_layout" type="layout">@layout/sud_glif_expressive_recycler_template_content_wide</item>
 
+    <!-- lottie_loading_layout -->
     <item name="sud_glif_expressive_loading_template_content_layout" type="layout" tools:ignore="UnusedResources">@layout/sud_glif_expressive_loading_template_content_wide</item>
     <item name="sud_glif_expressive_fullscreen_loading_template_content_layout" type="layout" tools:ignore="UnusedResources">@layout/sud_glif_expressive_fullscreen_loading_template_content_wide</item>
 </resources>

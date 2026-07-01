@@ -26,8 +26,8 @@ import android.text.TextUtils;
 import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.annotation.VisibleForTesting;
-import com.google.android.setupdesign.R;
 import com.google.android.setupcompat.util.Logger;
+import com.google.android.setupdesign.R;
 
 /** Helper class to get attributes of the device, like a friendly display name. */
 public final class DeviceHelper {

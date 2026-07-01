@@ -1,28 +1,14 @@
-/**
- * Include this gradle file if you are building against this as a standalone gradle library project,
- * as opposed to building it as part of the git-tree. This is typically the file you want to include
- * if you create a new project in Android Studio.
- *
- * For example, you can include the following in your settings.gradle file:
- *      include ':setupcompat'
- *      project(':setupcompat').projectDir = new File(PATH_TO_THIS_DIRECTORY)
- *
- * And then you can include the :setupcompat project as one of your dependencies
- *      dependencies {
- *          implementation project(path: ':setupcompat')
- *      }
- */
-
 plugins {
     id "com.android.library"
 }
 
 android {
     namespace = "com.google.android.setupcompat"
-    compileSdk = 35
+    compileSdk = 37
 
     defaultConfig {
         minSdk = 19
+        //noinspection ExpiredTargetSdkVersion
         targetSdk = 28
     }
 

@@ -40,8 +40,8 @@
     <item name="sud_glif_recycler_template" type="layout">@layout/sud_glif_recycler_template_card</item>
     <item name="sud_glif_recycler_embedded_template" type="layout">@layout/sud_glif_recycler_embedded_template_card</item>
 
+    <!-- lottie_loading_layout -->
     <item name="sud_glif_loading_template" type="layout"  tools:ignore="UnusedResources">@layout/sud_glif_loading_template_card</item>
     <item name="sud_glif_loading_embedded_template" type="layout"  tools:ignore="UnusedResources">@layout/sud_glif_loading_embedded_template_card</item>
-
 </resources>
 

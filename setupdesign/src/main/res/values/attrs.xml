@@ -346,6 +346,7 @@
     <!-- Footer bar style -->
     <attr name="sudFooterBackgroundColor" format="color" />
 
+    <!-- lottie_loading_layout -->
     <declare-styleable name="SudGlifLoadingLayout">
         <attr name="sudIllustrationType" format="string" />
         <attr name="sudLottieRes" format="reference" />

@@ -30,7 +30,7 @@ android {
 
 protobuf {
     protoc {
-        artifact = 'com.google.protobuf:protoc:4.36.1'
+        artifact = 'com.google.protobuf:protoc:4.36.2'
     }
     generateProtoTasks {
         all().configureEach { task ->
@@ -46,12 +46,12 @@ protobuf {
 
 dependencies {
     implementation project(":setupcompat")
-    implementation "androidx.annotation:annotation:1.10.0"
+    implementation "androidx.annotation:annotation:1.11.0"
     implementation "androidx.recyclerview:recyclerview:1.4.0"
     implementation "androidx.appcompat:appcompat:1.8.0"
     implementation "androidx.window:window:1.5.1"
     implementation "com.airbnb.android:lottie:6.7.1"
     implementation "com.google.android.material:material:1.14.0"
     implementation "com.google.errorprone:error_prone_annotations:2.50.0"
-    implementation 'com.google.protobuf:protobuf-javalite:4.36.1'
+    implementation 'com.google.protobuf:protobuf-javalite:4.36.2'
 }

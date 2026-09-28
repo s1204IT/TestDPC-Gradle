@@ -55,12 +55,12 @@ android {
 }
 
 dependencies {
-    implementation "androidx.annotation:annotation:1.10.0"
+    implementation "androidx.annotation:annotation:1.11.0"
     implementation "androidx.appcompat:appcompat:1.8.0"
     implementation "androidx.appcompat:appcompat-resources:1.8.0"
     implementation "androidx.collection:collection:1.6.0"
     implementation "androidx.constraintlayout:constraintlayout:2.2.2"
-    implementation "androidx.core:core:1.19.0"
+    implementation "androidx.core:core:1.19.1"
     implementation "androidx.enterprise:enterprise-feedback:1.1.0"
     implementation "androidx.legacy:legacy-support-core-ui:1.0.0"
     implementation "androidx.legacy:legacy-support-v13:1.0.0"
@@ -76,7 +76,7 @@ dependencies {
     implementation "androidx.window:window:1.5.1"
     implementation "com.google.android.material:material:1.14.0"
     implementation "com.google.guava:guava:33.7.1-android"
-    implementation "com.google.testparameterinjector:test-parameter-injector:1.22"
+    implementation "com.google.testparameterinjector:test-parameter-injector:1.23"
     implementation "com.google.errorprone:error_prone_annotations:2.50.0"
     implementation "junit:junit:4.13.2"
     implementation "javax.inject:javax.inject:1"

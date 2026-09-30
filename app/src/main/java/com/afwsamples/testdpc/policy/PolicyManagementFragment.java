@@ -562,6 +562,7 @@ public class PolicyManagementFragment extends BaseSearchablePolicyPreferenceFrag
   private Uri mVideoUri;
   private boolean mIsProfileOwner;
   private boolean mIsOrganizationOwnedProfileOwner;
+  private boolean mCanTransferOwnership;
 
   @Override
   public void onCreate(Bundle savedInstanceState) {
@@ -593,6 +594,9 @@ public class PolicyManagementFragment extends BaseSearchablePolicyPreferenceFrag
 
     mImageUri = getStorageUri("image.jpg");
     mVideoUri = getStorageUri("video.mp4");
+
+    mCanTransferOwnership =
+        (context.getApplicationInfo().flags & ApplicationInfo.FLAG_TEST_ONLY) != 0;
 
     super.onCreate(savedInstanceState);
   }
@@ -783,7 +787,11 @@ public class PolicyManagementFragment extends BaseSearchablePolicyPreferenceFrag
     findPreference(MODIFY_WIFI_CONFIGURATION_KEY).setOnPreferenceClickListener(this);
     findPreference(MODIFY_OWNED_WIFI_CONFIGURATION_KEY).setOnPreferenceClickListener(this);
     findPreference(REMOVE_NOT_OWNED_WIFI_CONFIGURATION_KEY).setOnPreferenceClickListener(this);
-    findPreference(TRANSFER_OWNERSHIP_KEY).setOnPreferenceClickListener(this);
+    final CustomConstraint allowTransferOwnershipChecker =
+        () -> mCanTransferOwnership ? NO_CUSTOM_CONSTRAINT : R.string.requires_different_build;
+    DpcPreference transferOwnershipPreference = findPreference(TRANSFER_OWNERSHIP_KEY);
+    transferOwnershipPreference.addCustomConstraint(allowTransferOwnershipChecker);
+    transferOwnershipPreference.setOnPreferenceClickListener(this);
     findPreference(SHOW_WIFI_MAC_ADDRESS_KEY).setOnPreferenceClickListener(this);
     mInstallNonMarketAppsPreference =
         (DpcSwitchPreference) findPreference(INSTALL_NONMARKET_APPS_KEY);
@@ -923,8 +931,7 @@ public class PolicyManagementFragment extends BaseSearchablePolicyPreferenceFrag
         prefix, Util.isRunningOnAutomotiveDevice(getActivity()));
     if (Util.SDK_INT >= VERSION_CODES.S) {
       pw.printf(
-          "%sisHeadlessSystemUserMode(): %s\n",
-          prefix, mUserManager.isHeadlessSystemUserMode());
+          "%sisHeadlessSystemUserMode(): %s\n", prefix, mUserManager.isHeadlessSystemUserMode());
     }
   }
 
@@ -2632,8 +2639,11 @@ public class PolicyManagementFragment extends BaseSearchablePolicyPreferenceFrag
 
   private void loadAppStatus() {
     final @StringRes List<Integer> appStatus = new ArrayList<>();
+
     if (mDevicePolicyManager.isProfileOwnerApp(mPackageName)) {
-      if (mIsOrganizationOwnedProfileOwner) {
+      if (Util.isFullUser(getContext())) {
+        appStatus.add(R.string.this_is_a_profile_owner_on_full_user);
+      } else if (mIsOrganizationOwnedProfileOwner) {
         appStatus.add(R.string.this_is_an_org_owned_profile_owner);
       } else {
         appStatus.add(R.string.this_is_a_profile_owner);
@@ -2657,7 +2667,6 @@ public class PolicyManagementFragment extends BaseSearchablePolicyPreferenceFrag
               String.join(
                   "\n", appStatus.stream().map(this::getString).collect(Collectors.toList())));
     }
-
   }
 
   @TargetApi(VERSION_CODES.M)
@@ -4843,7 +4852,7 @@ public class PolicyManagementFragment extends BaseSearchablePolicyPreferenceFrag
   }
 
   private int validateNotHsumMode() {
-    if (Util.SDK_INT >= VERSION_CODES.S && mUserManager.isHeadlessSystemUserMode()) {
+    if (Util.SDK_INT >= VERSION_CODES.S && UserManager.isHeadlessSystemUserMode()) {
       return R.string.not_supported_on_hsum;
     }
     return NO_CUSTOM_CONSTRAINT;

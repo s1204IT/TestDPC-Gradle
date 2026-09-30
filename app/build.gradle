@@ -9,8 +9,8 @@ android {
     defaultConfig {
         minSdk = 23
         targetSdk = compileSdk
-        versionCode = 9014
-        versionName = "9.0.14"
+        versionCode = 9016
+        versionName = "9.0.16"
         proguardFiles += "proguard-rules.pro"
     }
 

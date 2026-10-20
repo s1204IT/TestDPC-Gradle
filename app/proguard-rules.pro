@@ -1,3 +1,5 @@
 -keep class androidx.core.app.CoreComponentFactory
 -keepattributes LineNumberTable,SourceFile
 -renamesourcefileattribute SourceFile
+-dontwarn androidx.window.extensions.**
+-dontwarn androidx.window.sidecar.**

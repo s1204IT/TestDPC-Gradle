@@ -1,6 +1,5 @@
 plugins {
-    id "com.android.library"
-    id "com.google.protobuf"
+    alias libs.plugins.agp.lib
 }
 
 android {
@@ -28,30 +27,13 @@ android {
     }
 }
 
-protobuf {
-    protoc {
-        artifact = 'com.google.protobuf:protoc:4.36.2'
-    }
-    generateProtoTasks {
-        all().configureEach { task ->
-            task.builtins {
-                java {
-                    option 'lite'
-                }
-            }
-        }
-    }
-}
-
-
 dependencies {
     implementation project(":setupcompat")
-    implementation "androidx.annotation:annotation:1.11.0"
-    implementation "androidx.recyclerview:recyclerview:1.4.0"
-    implementation "androidx.appcompat:appcompat:1.8.0"
-    implementation "androidx.window:window:1.5.1"
-    implementation "com.airbnb.android:lottie:6.7.1"
-    implementation "com.google.android.material:material:1.14.0"
-    implementation "com.google.errorprone:error_prone_annotations:2.50.0"
-    implementation 'com.google.protobuf:protobuf-javalite:4.36.2'
+    implementation libs.annotation
+    implementation libs.appcompat
+    implementation libs.recyclerview
+    implementation libs.window
+    implementation libs.errorprone
+    implementation libs.material
+    implementation libs.lottie
 }

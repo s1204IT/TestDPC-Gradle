@@ -15,5 +15,5 @@
 /.idea/
 # VS Code
 /.vscode/
-# Keystore
-/keystore/
+# macOS
+.DS_Store
